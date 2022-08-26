@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::any('unauthorized', [\App\Http\Controllers\AuthController::class, 'unauthorized'])->name('unauthorized');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::post('register', [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
 
 Route::get('sandbox', [\App\Http\Controllers\Controller::class, 'sandbox'])->name('sandbox');
