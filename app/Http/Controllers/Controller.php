@@ -10,4 +10,13 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function sandbox(){
+
+        $data = [];
+        return response()->json([
+            'message' => __('apiMessages.sandbox_message'),
+            'data' => $data
+        ], 200);
+    }
 }
