@@ -13,7 +13,7 @@ class ReservationIndex extends RequestAbstract
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

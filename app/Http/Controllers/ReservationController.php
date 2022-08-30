@@ -6,6 +6,8 @@ use App\Http\Requests\Reservation\ReservationDelete;
 use App\Http\Requests\Reservation\ReservationIndex;
 use App\Http\Requests\Reservation\ReservationPatch;
 use App\Http\Requests\Reservation\ReservationPostPut;
+use App\Http\Resources\ReservationResource;
+use App\Models\Reservation;
 use Illuminate\Http\JsonResponse;
 
 class ReservationController extends Controller
@@ -16,9 +18,25 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index(ReservationIndex $request): JsonResponse
+    public function index(ReservationIndex $request, Reservation $reservation = null): JsonResponse
     {
+        if($reservation){
+            return response()->json([
+                'data' => new ReservationResource($reservation),
+            ], 200);
+        }
 
+        $reservations = ReservationResource::collection(Reservation::all());
+
+        if($reservations->isEmpty()){
+            return response()->json([
+                'message' => __('apiMessages.reservation.not_found'),
+            ], 404);
+        }
+
+        return response()->json([
+            'data' => $reservations,
+        ], 200);
     }
 
     /**
@@ -51,7 +69,7 @@ class ReservationController extends Controller
      */
     public function patch(ReservationPatch $request): JsonReponse
     {
-
+        
     }
 
     /**
