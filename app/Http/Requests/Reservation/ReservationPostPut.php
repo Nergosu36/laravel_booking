@@ -13,7 +13,7 @@ class ReservationPostPut extends RequestAbstract
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class ReservationPostPut extends RequestAbstract
     public function rules()
     {
         return [
-            //
+            'start_date' => 'Date|required|before:end_date',
+            'end_date' => 'Date|required',
+            'number_of_guests' => 'required',
         ];
     }
 }

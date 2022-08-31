@@ -16,7 +16,7 @@ class VacancyResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'date' => $this->date,
+            'date' => $this->date->format('Y-m-d'),
             'price' => $this->price,
             'slots' => $this->slots,
         ];

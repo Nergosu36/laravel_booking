@@ -30,8 +30,6 @@ Route::delete('vacancies/{vacancy}', [\App\Http\Controllers\VacancyController::c
 //@@@@@@@@@@@@@ RESERVATIONS @@@@@@@@@@@@@
 Route::get('reservations/{reservation?}', [\App\Http\Controllers\ReservationController::class, 'index'])->name('reservations_get');
 Route::post('reservations', [\App\Http\Controllers\ReservationController::class, 'post'])->name('reservations_post');
-Route::put('reservations/{reservation}', [\App\Http\Controllers\ReservationController::class, 'put'])->name('reservations_put');
-Route::patch('reservations/{reservation}', [\App\Http\Controllers\ReservationController::class, 'patch'])->name('reservations_patch');
 Route::delete('reservations/{reservation}', [\App\Http\Controllers\ReservationController::class, 'delete'])->name('reservations_delete');
 
 //@@@@@@@@@@@@@ CUSTOM @@@@@@@@@@@@@

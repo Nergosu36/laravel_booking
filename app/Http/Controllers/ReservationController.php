@@ -8,10 +8,29 @@ use App\Http\Requests\Reservation\ReservationPatch;
 use App\Http\Requests\Reservation\ReservationPostPut;
 use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
+use App\Services\ReservationServic;
+use App\Services\ReservationService;
 use Illuminate\Http\JsonResponse;
 
 class ReservationController extends Controller
 {
+    /**
+     * The reservation service implementation.
+     *
+     * @var ReservationService
+     */
+    protected $reservationService;
+
+    /**
+     *
+     * @param  ReservationService  $reservationService
+     * @return void
+     */
+    public function __construct(ReservationService $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
+
     /**
      * Get list of all reservations.
      *
@@ -20,7 +39,7 @@ class ReservationController extends Controller
      */
     public function index(ReservationIndex $request, Reservation $reservation = null): JsonResponse
     {
-        if($reservation){
+        if ($reservation) {
             return response()->json([
                 'data' => new ReservationResource($reservation),
             ], 200);
@@ -28,7 +47,7 @@ class ReservationController extends Controller
 
         $reservations = ReservationResource::collection(Reservation::all());
 
-        if($reservations->isEmpty()){
+        if ($reservations->isEmpty()) {
             return response()->json([
                 'message' => __('apiMessages.reservation.not_found'),
             ], 404);
@@ -47,29 +66,20 @@ class ReservationController extends Controller
      */
     public function post(ReservationPostPut $request): JsonResponse
     {
+        $validatedData = $request->validated();
+        $availability = $this->reservationService->checkAvailableDaysInGivenPeriod($validatedData);
+        if (isset($availability['daysUnavailable'])) {
+            return response()->json([
+                'message' => 'Not all days for given period are available.',
+                'unavailable_days' => $availability['daysUnavailable'],
+            ], 200);
+        }
+        $this->reservationService->getOrderDetails($validatedData);
+        $summary = $this->reservationService->makeReservation();
 
-    }
-
-    /**
-     * Update a reservation.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function put(ReservationPostPut $request, Reservation $reservation): JsonResponse
-    {
-
-    }
-
-    /**
-     * Edit existing reservation.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function patch(ReservationPatch $request): JsonReponse
-    {
-        
+        return response()->json([
+            'summary' => $summary,
+        ], 200);
     }
 
     /**
@@ -78,8 +88,13 @@ class ReservationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function delete(ReservationDelete $request): JsonResponse
+    public function delete(ReservationDelete $request, Reservation $reservation): JsonResponse
     {
-        
+        $summary = $this->reservationService->removeReservation($reservation);
+
+        return response()->json([
+            'message' => __('apiMessages.reservation.deleted'),
+            'summary' => $summary,
+        ], 202);
     }
 }
