@@ -14,6 +14,11 @@ class RequestAbstract extends FormRequest
 {
     protected ?User $user;
 
+    public function authorize()
+    {
+        return !is_null(auth()->user());
+    }
+    
     /**
      * @param Validator $validator
      * @return HttpResponseException

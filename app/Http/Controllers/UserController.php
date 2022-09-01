@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function me(AuthRequest $request){
+    public function me(){
         return auth()->user();
     }
 }

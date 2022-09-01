@@ -20,17 +20,22 @@ Route::any('unauthorized', [\App\Http\Controllers\AuthController::class, 'unauth
 Route::post('login', [\App\Http\Controllers\AuthController::class, 'login'])->name('login');
 Route::post('register', [\App\Http\Controllers\AuthController::class, 'register'])->name('register');
 
-//@@@@@@@@@@@@@ VACANCIES @@@@@@@@@@@@@
-Route::get('vacancies/{vacancy?}', [\App\Http\Controllers\VacancyController::class, 'index'])->name('vacancies_get');
-Route::post('vacancies', [\App\Http\Controllers\VacancyController::class, 'post'])->name('vacancies_post');
-Route::put('vacancies/{vacancy}',  [\App\Http\Controllers\VacancyController::class, 'put'])->name('vacancies_put');
-Route::patch('vacancies/{vacancy}', [\App\Http\Controllers\VacancyController::class, 'patch'])->name('vacancies_patch');
-Route::delete('vacancies/{vacancy}', [\App\Http\Controllers\VacancyController::class, 'delete'])->name('vacancies_delete');
+Route::middleware('auth:api')->group(function () {
+    //@@@@@@@@@@@@@ VACANCIES @@@@@@@@@@@@@
+    Route::get('vacancies/{vacancy?}', [\App\Http\Controllers\VacancyController::class, 'index'])->name('vacancies_get');
+    Route::post('vacancies', [\App\Http\Controllers\VacancyController::class, 'post'])->name('vacancies_post');
+    Route::put('vacancies/{vacancy}',  [\App\Http\Controllers\VacancyController::class, 'put'])->name('vacancies_put');
+    Route::patch('vacancies/{vacancy}', [\App\Http\Controllers\VacancyController::class, 'patch'])->name('vacancies_patch');
+    Route::delete('vacancies/{vacancy}', [\App\Http\Controllers\VacancyController::class, 'delete'])->name('vacancies_delete');
 
-//@@@@@@@@@@@@@ RESERVATIONS @@@@@@@@@@@@@
-Route::get('reservations/{reservation?}', [\App\Http\Controllers\ReservationController::class, 'index'])->name('reservations_get');
-Route::post('reservations', [\App\Http\Controllers\ReservationController::class, 'post'])->name('reservations_post');
-Route::delete('reservations/{reservation}', [\App\Http\Controllers\ReservationController::class, 'delete'])->name('reservations_delete');
+    //@@@@@@@@@@@@@ RESERVATIONS @@@@@@@@@@@@@
+    Route::get('reservations/{reservation?}', [\App\Http\Controllers\ReservationController::class, 'index'])->name('reservations_get');
+    Route::post('reservations', [\App\Http\Controllers\ReservationController::class, 'post'])->name('reservations_post');
+    Route::delete('reservations/{reservation}', [\App\Http\Controllers\ReservationController::class, 'delete'])->name('reservations_delete');
 
-//@@@@@@@@@@@@@ CUSTOM @@@@@@@@@@@@@
-Route::get('sandbox', [\App\Http\Controllers\Controller::class, 'sandbox'])->name('sandbox');
+    //@@@@@@@@@@@@@ CUSTOM @@@@@@@@@@@@@
+    Route::get('sandbox', [\App\Http\Controllers\Controller::class, 'sandbox'])->name('sandbox');
+
+    //@@@@@@@@@@@@@ USER @@@@@@@@@@@@@
+    Route::get('me', [\App\Http\Controllers\UserController::class, 'me'])->name('me_get');
+});

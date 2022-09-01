@@ -13,7 +13,7 @@ class ReservationPostPut extends RequestAbstract
      */
     public function authorize()
     {
-        return true;
+        return parent::authorize();
     }
 
     /**

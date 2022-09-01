@@ -13,7 +13,7 @@ class ReservationPatch extends RequestAbstract
      */
     public function authorize()
     {
-        return false;
+        return parent::authorize();
     }
 
     /**
