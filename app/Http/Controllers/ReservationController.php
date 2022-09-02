@@ -72,7 +72,7 @@ class ReservationController extends Controller
             return response()->json([
                 'message' => 'Not all days for given period are available.',
                 'unavailable_days' => $availability['daysUnavailable'],
-            ], 200);
+            ], 404);
         }
         $this->reservationService->getOrderDetails($validatedData);
         $summary = $this->reservationService->makeReservation();
